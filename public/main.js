@@ -107,14 +107,26 @@ const url = `https://youtube138.p.rapidapi.com/search/?q=${busqueda}&hl=en&gl=US
 	try {
 		const response = await fetch(url, options);
 		const result = await response.json();
-		titulo = result.contents[0].video.title;
-		avatar = result.contents[0].video.author.avatar[0].url;
-		nombreCanal = result.contents[0].video.author.title;
-		id = result.contents[0].video.videoId;
-		ponerDatos1(titulo, avatar, nombreCanal, id)
-		comentarios(id)
-		descripcion(id)
-		videosRelacionados(id)    
+		if (result.contents[1].type === "video"){
+			titulo = result.contents[1].video.title;
+			avatar = result.contents[1].video.author.avatar[0].url;
+			nombreCanal = result.contents[1].video.author.title;
+			id = result.contents[1].video.videoId;
+			ponerDatos1(titulo, avatar, nombreCanal, id)
+			comentarios(id)
+			descripcion(id)
+			videosRelacionados(id)   
+		} else {
+			titulo = result.contents[0].video.title;
+			avatar = result.contents[0].video.author.avatar[0].url;
+			nombreCanal = result.contents[0].video.author.title;
+			id = result.contents[0].video.videoId;
+			ponerDatos1(titulo, avatar, nombreCanal, id)
+			comentarios(id)
+			descripcion(id)
+			videosRelacionados(id)
+		}
+		 
 	} catch (error) {
 		console.error(error);
 	}
