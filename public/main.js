@@ -1,3 +1,11 @@
+const options = {
+	method: 'GET',
+	headers: {
+		'X-RapidAPI-Key': '43fb46b3ddmshb564e496bdd54f2p19a28bjsn9174e7cf60a2',
+		'X-RapidAPI-Host': 'youtube138.p.rapidapi.com'
+	}
+};
+
 const ponerVideosRelacionados = async (videos) => {
 	let a1 = document.querySelector('#urlVideo1');
 	let a2 = document.querySelector('#urlVideo2');
@@ -15,13 +23,6 @@ const ponerVideosRelacionados = async (videos) => {
 
 const videosRelacionados = async (id) => {
 	const url = `https://youtube138.p.rapidapi.com/video/related-contents/?id=${id}&hl=es&gl=US`;
-	const options = {
-		method: 'GET',
-		headers: {
-			'X-RapidAPI-Key': '43fb46b3ddmshb564e496bdd54f2p19a28bjsn9174e7cf60a2',
-			'X-RapidAPI-Host': 'youtube138.p.rapidapi.com'
-		}
-	};
 	
 	try {
 		const response = await fetch(url, options);
@@ -51,21 +52,14 @@ const ponerDescripcion = async (descripcion) => {
 
 const descripcion = async (id) => {
 	const url = `https://youtube138.p.rapidapi.com/video/details/?id=${id}&hl=es&gl=US`;
-const options = {
-	method: 'GET',
-	headers: {
-		'X-RapidAPI-Key': '43fb46b3ddmshb564e496bdd54f2p19a28bjsn9174e7cf60a2',
-		'X-RapidAPI-Host': 'youtube138.p.rapidapi.com'
-	}
-};
 
-try {
-	const response = await fetch(url, options);
-	const result = await response.json();
-	ponerDescripcion(result.description)
-} catch (error) {
-	console.error(error);
-}
+	try {
+		const response = await fetch(url, options);
+		const result = await response.json();
+		ponerDescripcion(result.description)
+	} catch (error) {
+		console.error(error);
+	}
 }
 
 const ponerComentarios = async (comentarios) => {
@@ -84,22 +78,15 @@ const ponerComentarios = async (comentarios) => {
 
 const comentarios = async (id) => {
 	const url = `https://youtube138.p.rapidapi.com/video/comments/?id=${id}&hl=es&gl=US`;
-const options = {
-	method: 'GET',
-	headers: {
-		'X-RapidAPI-Key': '43fb46b3ddmshb564e496bdd54f2p19a28bjsn9174e7cf60a2',
-		'X-RapidAPI-Host': 'youtube138.p.rapidapi.com'
-	}
-};
 
-try {
-	const response = await fetch(url, options);
-	const result = await response.json();
-	ponerComentarios(result.comments);
-	console.log(result.comments)
-} catch (error) {
-	console.error(error);
-}
+	try {
+		const response = await fetch(url, options);
+		const result = await response.json();
+		ponerComentarios(result.comments);
+		console.log(result.comments)
+	} catch (error) {
+		console.error(error);
+	}
 }
 
 
@@ -117,36 +104,28 @@ const ponerDatos1 = async (titulo, avatar, nombreCanal, id) => {
 const funcion = async (busqueda) => {
 const url = `https://youtube138.p.rapidapi.com/search/?q=${busqueda}&hl=en&gl=US`;
 
-const options = {
-	method: 'GET',
-	headers: {
-		'X-RapidAPI-Key': '43fb46b3ddmshb564e496bdd54f2p19a28bjsn9174e7cf60a2',
-		'X-RapidAPI-Host': 'youtube138.p.rapidapi.com'
+	try {
+		const response = await fetch(url, options);
+		const result = await response.json();
+		titulo = result.contents[0].video.title;
+		avatar = result.contents[0].video.author.avatar[0].url;
+		nombreCanal = result.contents[0].video.author.title;
+		id = result.contents[0].video.videoId;
+		ponerDatos1(titulo, avatar, nombreCanal, id)
+		comentarios(id)
+		descripcion(id)
+		videosRelacionados(id)    
+	} catch (error) {
+		console.error(error);
 	}
-};
-
-try {
-	const response = await fetch(url, options);
-	const result = await response.json();
-	titulo = result.contents[0].video.title;
-	avatar = result.contents[0].video.author.avatar[0].url;
-	nombreCanal = result.contents[0].video.author.title;
-	id = result.contents[0].video.videoId;
-	ponerDatos1(titulo, avatar, nombreCanal, id)
-	comentarios(id)
-	descripcion(id)
-	videosRelacionados(id)    
-} catch (error) {
-	console.error(error);
-}
 }
 
 let formulario = document.querySelector('#formulario');
 
 formulario.addEventListener("submit", (e)=>{
-    e.preventDefault();
-    let data = Object.fromEntries(new FormData(e.target));
-    funcion(data.buscar)
+	e.preventDefault();
+	let data = Object.fromEntries(new FormData(e.target));
+	funcion(data.buscar)
 })
 
 
